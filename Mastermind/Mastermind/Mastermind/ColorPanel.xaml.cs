@@ -10,11 +10,17 @@ namespace Mastermind
     {
         Ellipse selected_circle;
 
-        public ColorPanel(ref Ellipse selected_circle)
+        public ColorPanel(ref Ellipse selected_circle, bool is_super_mastermind)
         {
             InitializeComponent();
 
             this.selected_circle = selected_circle;
+
+            if (!is_super_mastermind)
+            {
+                label_optional_color_1.Visibility = Visibility.Collapsed;
+                label_optional_color_2.Visibility = Visibility.Collapsed;
+            }
 
             foreach (Label l in grid_colorpanel.Children)
                 l.MouseLeftButtonDown += getLabelColor;

@@ -113,20 +113,20 @@ namespace Mastermind
             int y = coordinates[1];
 
             if (!game_is_super_mastermind && x + mastermind_round_counter == num_rounds - 1)
-                setColorFromPanel(mastermind_circles[x, y], 6);
+                setColorFromPanel(mastermind_circles[x, y], false);
             else if (x + super_mastermind_round_counter == num_rounds - 1)
-                setColorFromPanel(super_mastermind_circles[x, y], 8);
+                setColorFromPanel(super_mastermind_circles[x, y], true);
         }
 
-        private void setColorFromPanel(Ellipse sender, int num_colors)
+        private void setColorFromPanel(Ellipse sender, bool is_super_mastermind)
         {
             Point mousePosition = Mouse.GetPosition(this);
 
-            ColorPanel colorPanel = new ColorPanel(ref sender);
+            ColorPanel colorPanel = new ColorPanel(ref sender, is_super_mastermind);
             colorPanel.Owner = this;
 
-            colorPanel.Top = mousePosition.Y - 45;
-            colorPanel.Left = mousePosition.X - 65;
+            colorPanel.Top = mousePosition.Y - 120;
+            colorPanel.Left = mousePosition.X + 25;
             if (WindowState != WindowState.Maximized)
             {
                 colorPanel.Top += Top;

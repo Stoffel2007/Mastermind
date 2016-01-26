@@ -20,13 +20,13 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label Background="Red" Grid.Row="0" Grid.Column="0" Margin="5" />
-            <Label Background="Green" Grid.Row="0" Grid.Column="1" Margin="5" />
-            <Label Background="Yellow" Grid.Row="0" Grid.Column="2" Margin="5" />
+            <Label Background="Yellow" Grid.Row="0" Grid.Column="1" Margin="5" />
+            <Label Background="Green" Grid.Row="0" Grid.Column="2" Margin="5" />
             <Label Name="label_optional_color_1" Background="Black" Grid.Row="1" Grid.Column="0" Margin="5" />
             <Label Name="label_optional_color_2" Background="Gray" Grid.Row="1" Grid.Column="2" Margin="5" />
             <Label Background="Blue" Grid.Row="2" Grid.Column="0" Margin="5" />
-            <Label Background="Orange" Grid.Row="2" Grid.Column="1" Margin="5" />
-            <Label Background="Purple" Grid.Row="2" Grid.Column="2" Margin="5" />
+            <Label Background="Purple" Grid.Row="2" Grid.Column="1" Margin="5" />
+            <Label Background="White" Grid.Row="2" Grid.Column="2" Margin="5" />
         </Grid>
     </ScrollViewer>
 </Window>
