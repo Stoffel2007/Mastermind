@@ -1,28 +1,44 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Mastermind
 {
     public partial class MainWindow : Window
     {
+        Ellipse[,] mastermind_circles, mastermind_circles_check, super_mastermind_circles, super_mastermind_circles_check;
+        Ellipse[] mastermind_solution, super_mastermind_solution;
+        double size;
+        
         public MainWindow()
         {
             InitializeComponent();
 
+            size = 40;
+
             drawGameboards();
+            drawCircles();
+
+            mastermind_circles = new Ellipse[12, 4];
+            mastermind_circles_check = new Ellipse[12, 4];
+            super_mastermind_circles = new Ellipse[12, 5];
+            super_mastermind_circles_check = new Ellipse[12, 5];
+
+            mastermind_solution = new Ellipse[4];
+            super_mastermind_solution = new Ellipse[5];
         }
 
         private void drawGameboards()
         {
-            int size = 40;
-            
             gameboard_mastermind.Height = 13 * size;
             gameboard_mastermind.Width = 5 * size;
             
             gameboard_super_mastermind.Height = 13 * size;
-            gameboard_super_mastermind.Width = 6 * size;
+            gameboard_super_mastermind.Width = 7.5 * size;
 
+            // Both
             for (int i = 0; i < 13; i++)
             {
                 RowDefinition newRow1 = new RowDefinition();
@@ -43,16 +59,24 @@ namespace Mastermind
             }
 
             // Super Mastermind
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 5; i++)
             {
+                ColumnDefinition newCol = new ColumnDefinition();
+                newCol.Width = new GridLength(size/2);
+                gameboard_super_mastermind.ColumnDefinitions.Add(newCol);
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+
                 ColumnDefinition newCol = new ColumnDefinition();
                 newCol.Width = new GridLength(size);
                 gameboard_super_mastermind.ColumnDefinitions.Add(newCol);
             }
 
+            // Mastermind
             for (int i = 1; i < 13; i++)
             {
-                // Mastermind
                 Grid newGrid1 = new Grid();
                 newGrid1.ShowGridLines = true;
 
@@ -75,30 +99,38 @@ namespace Mastermind
                 Grid.SetRow(newGrid1, i);
                 Grid.SetColumn(newGrid1, 0);
                 gameboard_mastermind.Children.Add(newGrid1);
+            }
+        }
+
+        private void drawCircles()
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                // Mastermind
+                for (int j = 0; j < 4; j++)
+                {
+                    //mastermind_circles[i, j] = null;
+                    Ellipse newCircle = new Ellipse();
+                    newCircle.Width = size - 5;
+                    newCircle.Height = size - 5;
+                    newCircle.Stroke = Brushes.Black;
+                    Grid.SetRow(newCircle, i + 1);
+                    Grid.SetColumn(newCircle, j + 1);
+                    gameboard_mastermind.Children.Add(newCircle);
+                    //mastermind_circles[i, j] = newCircle;
+                }
 
                 // Super Mastermind
-                Grid newGrid2 = new Grid();
-                newGrid2.ShowGridLines = true;
-
-                RowDefinition row2_1 = new RowDefinition();
-                row2_1.Height = new GridLength(size / 2);
-                newGrid2.RowDefinitions.Add(row2_1);
-
-                RowDefinition row2_2 = new RowDefinition();
-                row2_2.Height = new GridLength(size / 2);
-                newGrid2.RowDefinitions.Add(row2_2);
-
-                ColumnDefinition col2_1 = new ColumnDefinition();
-                col2_1.Width = new GridLength(size / 2);
-                newGrid2.ColumnDefinitions.Add(col2_1);
-
-                ColumnDefinition col2_2 = new ColumnDefinition();
-                col2_2.Width = new GridLength(size / 2);
-                newGrid2.ColumnDefinitions.Add(col2_2);
-
-                Grid.SetRow(newGrid2, i);
-                Grid.SetColumn(newGrid2, 0);
-                gameboard_super_mastermind.Children.Add(newGrid2);
+                for (int j = 0; j < 5; j++)
+                {
+                    Ellipse newCircle = new Ellipse();
+                    newCircle.Width = size - 5;
+                    newCircle.Height = size - 5;
+                    newCircle.Stroke = Brushes.Black;
+                    Grid.SetRow(newCircle, i + 1);
+                    Grid.SetColumn(newCircle, j + 5);
+                    gameboard_super_mastermind.Children.Add(newCircle);
+                }
             }
         }
 
