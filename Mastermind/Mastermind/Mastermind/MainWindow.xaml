@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mastermind"
         mc:Ignorable="d"
-        Title="Mastermind" Height="625" Width="500">
-
+        Title="Mastermind" Height="700" Width="500">
+    
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <Grid>
             <ComboBox HorizontalContentAlignment="Center" Name="combobox_game_mode" Height="25" Width="125" VerticalAlignment="Top" Margin="0,10,0,0">
@@ -14,14 +14,10 @@
                 <ComboBoxItem Content="Mastermind" Tag="1" Selected="changeGameboard" />
                 <ComboBoxItem Content="Super Mastermind" Tag="2" Selected="changeGameboard" />
             </ComboBox>
-
+            
             <StackPanel Margin="10,50,10,10">
-                <Grid ShowGridLines="true" Name="gameboard_mastermind" Visibility="Collapsed">
-                    
-                </Grid>
-                <Grid ShowGridLines="true" Name="gameboard_super_mastermind" Visibility="Collapsed">
-                    
-                </Grid>
+                <Grid ShowGridLines="True" Name="gameboard_mastermind" Visibility="Collapsed" />
+                <Grid ShowGridLines="True" Name="gameboard_super_mastermind" Visibility="Collapsed" />
             </StackPanel>
         </Grid>
     </ScrollViewer>
