@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -10,22 +11,27 @@ namespace Mastermind
     {
         Ellipse[,] mastermind_circles, mastermind_circles_check, super_mastermind_circles, super_mastermind_circles_check;
         Ellipse[] mastermind_circles_solution, super_mastermind_circles_solution;
-        double size;
+        int cell_size, mastermind_round_counter, super_mastermind_round_counter, num_rounds;
+        bool game_is_super_mastermind;
         
         public MainWindow()
         {
             InitializeComponent();
 
-            size = 40;
+            cell_size = 40;
+            mastermind_round_counter = 0;
+            super_mastermind_round_counter = 0;
+            num_rounds = 12;
+            game_is_super_mastermind = false;
 
-            mastermind_circles = new Ellipse[12, 4];
-            mastermind_circles_check = new Ellipse[12, 4];
+            mastermind_circles = new Ellipse[num_rounds, 4];
+            mastermind_circles_check = new Ellipse[num_rounds, 4];
             mastermind_circles_solution = new Ellipse[4];
 
             InitializeCircles(ref gameboard_mastermind, ref mastermind_circles, ref mastermind_circles_check, ref mastermind_circles_solution);
 
-            super_mastermind_circles = new Ellipse[12, 5];
-            super_mastermind_circles_check = new Ellipse[12, 5];
+            super_mastermind_circles = new Ellipse[num_rounds, 5];
+            super_mastermind_circles_check = new Ellipse[num_rounds, 5];
             super_mastermind_circles_solution = new Ellipse[4];
 
             InitializeCircles(ref gameboard_super_mastermind, ref super_mastermind_circles, ref super_mastermind_circles_check, ref mastermind_circles_solution);
@@ -42,25 +48,29 @@ namespace Mastermind
             {
                 for (int j = 0; j < width; j++)
                 {
-                    circles_check[i, j] = new Ellipse();
-                    circles_check[i, j].Height = size / 2 - 5;
-                    circles_check[i, j].Width = size / 2 - 5;
-                    circles_check[i, j].Stroke = Brushes.Black;
-                    circles_check[i, j].Fill = Brushes.AliceBlue;
-                    circles_check[i, j].MouseLeftButtonDown += openColorPanel;
-                    Grid.SetRow(circles_check[i, j], i);
-                    Grid.SetColumn(circles_check[i, j], j);
-                    gameboard.Children.Add(circles_check[i, j]);
+                    Ellipse newCircle1 = new Ellipse();
+                    newCircle1.Height = cell_size / 2 - 5;
+                    newCircle1.Width = cell_size / 2 - 5;
+                    newCircle1.Stroke = Brushes.Black;
+                    newCircle1.Fill = Brushes.White;
+                    newCircle1.Tag = new int[] { i, j };
+                    Grid.SetRow(newCircle1, i);
+                    Grid.SetColumn(newCircle1, j);
+                    gameboard.Children.Add(newCircle1);
+                    circles_check[i, j] = newCircle1;
 
-                    circles[i, j] = new Ellipse();
-                    circles[i, j].Height = size - 5;
-                    circles[i, j].Width = size - 5;
-                    circles[i, j].Stroke = Brushes.Black;
-                    circles[i, j].Fill = Brushes.AliceBlue;
-                    circles_check[i, j].MouseLeftButtonDown += openColorPanel;
-                    Grid.SetRow(circles[i, j], i);
-                    Grid.SetColumn(circles[i, j], j + width);
-                    gameboard.Children.Add(circles[i, j]);
+                    Ellipse newCircle2 = new Ellipse();
+                    newCircle2 = new Ellipse();
+                    newCircle2.Height = cell_size - 5;
+                    newCircle2.Width = cell_size - 5;
+                    newCircle2.Stroke = Brushes.Black;
+                    newCircle2.Fill = Brushes.White;
+                    newCircle2.Tag = new int[] { i, j };
+                    newCircle2.MouseLeftButtonDown += openColorPanel;
+                    Grid.SetRow(newCircle2, i);
+                    Grid.SetColumn(newCircle2, j + width);
+                    gameboard.Children.Add(newCircle2);
+                    circles[i, j] = newCircle2;
                 }
             }
         }
@@ -70,27 +80,27 @@ namespace Mastermind
             int length = circles.GetLength(0);
             int width = circles.GetLength(1);
 
-            gameboard.Height = size * length;
-            gameboard.Width = 1.5 * size * width;
+            gameboard.Height = length * (cell_size + 10);
+            gameboard.Width = 1.5* width * cell_size;
 
             for (int i = 0; i < length; i++)
             {
                 RowDefinition newRow = new RowDefinition();
-                newRow.Height = new GridLength(size);
+                newRow.Height = new GridLength(cell_size + 10);
                 gameboard.RowDefinitions.Add(newRow);
             }
 
             for (int i = 0; i < width; i++)
             {
                 ColumnDefinition newCol = new ColumnDefinition();
-                newCol.Width = new GridLength(size / 2);
+                newCol.Width = new GridLength(cell_size / 2);
                 gameboard.ColumnDefinitions.Add(newCol);
             }
 
             for (int i = 0; i < width; i++)
             {
                 ColumnDefinition newCol = new ColumnDefinition();
-                newCol.Width = new GridLength(size);
+                newCol.Width = new GridLength(cell_size);
                 gameboard.ColumnDefinitions.Add(newCol);
             }
         }
@@ -102,13 +112,30 @@ namespace Mastermind
             int x = coordinates[0];
             int y = coordinates[1];
 
-            Ellipse colorPanel = new Ellipse();
-            colorPanel.Height = size + 10;
-            colorPanel.Width = size + 10;
-            colorPanel.Stroke = Brushes.Blue;
-            Grid.SetRow(colorPanel, x + 1);
-            Grid.SetColumn(colorPanel, y + 1);
-            gameboard_mastermind.Children.Add(colorPanel);
+            if (!game_is_super_mastermind && x + mastermind_round_counter == num_rounds - 1)
+                mastermind_circles[x, y].Fill = getColorFromPanel(mastermind_circles[x, y], 6);
+            else if (x + super_mastermind_round_counter == num_rounds - 1)
+                super_mastermind_circles[x, y].Fill = getColorFromPanel(super_mastermind_circles[x, y], 8);
+        }
+
+        private SolidColorBrush getColorFromPanel(Ellipse sender, int num_colors)
+        {
+            Point mousePosition = Mouse.GetPosition(this);
+
+            ColorPanel colorPanel = new ColorPanel();
+            foreach (Label l in colorPanel.grid_colorpanel.Children)
+            colorPanel.Owner = this;
+
+            colorPanel.Top = mousePosition.Y - 45;
+            colorPanel.Left = mousePosition.X - 65;
+            if (WindowState != WindowState.Maximized)
+            {
+                colorPanel.Top += Top;
+                colorPanel.Left += Left;
+            }
+
+            colorPanel.ShowDialog();
+            return Brushes.Black;
         }
 
         private void changeGameboard(object sender, EventArgs e)
@@ -119,12 +146,18 @@ namespace Mastermind
             {
                 gameboard_mastermind.Visibility = Visibility.Visible;
                 gameboard_super_mastermind.Visibility = Visibility.Collapsed;
+                combobox_super_mastermind.Visibility = Visibility.Visible;
+                game_is_super_mastermind = false;
             }
             else
             {
                 gameboard_mastermind.Visibility = Visibility.Collapsed;
                 gameboard_super_mastermind.Visibility = Visibility.Visible;
+                combobox_mastermind.Visibility = Visibility.Visible;
+                game_is_super_mastermind = true;
             }
+
+            senderBox.Visibility = Visibility.Collapsed;
         }
     }
 }
