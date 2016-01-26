@@ -13,6 +13,7 @@ namespace Mastermind
         Ellipse[] mastermind_circles_solution, super_mastermind_circles_solution;
         int cell_size, mastermind_round_counter, super_mastermind_round_counter, num_rounds;
         bool game_is_super_mastermind;
+        SolidColorBrush selected_color;
         
         public MainWindow()
         {
@@ -124,6 +125,7 @@ namespace Mastermind
 
             ColorPanel colorPanel = new ColorPanel();
             foreach (Label l in colorPanel.grid_colorpanel.Children)
+                l.MouseLeftButtonDown += getLabelColor;
             colorPanel.Owner = this;
 
             colorPanel.Top = mousePosition.Y - 45;
@@ -135,7 +137,14 @@ namespace Mastermind
             }
 
             colorPanel.ShowDialog();
-            return Brushes.Black;
+            return selected_color;
+        }
+
+        private void getLabelColor(object sender, EventArgs e)
+        {
+            Label senderLabel = sender as Label;
+            selected_color = senderLabel.Background as SolidColorBrush;
+            GetWindow(senderLabel).Close();
         }
 
         private void changeGameboard(object sender, EventArgs e)
