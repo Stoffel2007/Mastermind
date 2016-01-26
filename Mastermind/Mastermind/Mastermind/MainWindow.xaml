@@ -7,7 +7,19 @@
         mc:Ignorable="d"
         Title="Mastermind" Height="350" Width="525">
 
-    <Grid>
-        
-    </Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <ComboBox Height="20" Width="125" VerticalAlignment="Top">
+                <ComboBoxItem Content="Spiel" IsSelected="True" IsEnabled="False" Visibility="Collapsed" />
+                <ComboBoxItem Content="Mastermind" Selected="changeGameboard" />
+                <ComboBoxItem Content="Super Mastermind" Selected="changeGameboard" />
+            </ComboBox>
+            <Grid Name="gameboard_mastermind" Visibility="Collapsed">
+                
+            </Grid>
+            <Grid Name="gameboard_super_mastermind" Visibility="Collapsed">
+                
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </Window>
