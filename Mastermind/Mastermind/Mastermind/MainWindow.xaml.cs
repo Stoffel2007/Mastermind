@@ -13,7 +13,6 @@ namespace Mastermind
         Ellipse[] mastermind_circles_solution, super_mastermind_circles_solution;
         int cell_size, mastermind_round_counter, super_mastermind_round_counter, num_rounds;
         bool game_is_super_mastermind;
-        SolidColorBrush selected_color;
         
         public MainWindow()
         {
@@ -114,18 +113,16 @@ namespace Mastermind
             int y = coordinates[1];
 
             if (!game_is_super_mastermind && x + mastermind_round_counter == num_rounds - 1)
-                mastermind_circles[x, y].Fill = getColorFromPanel(mastermind_circles[x, y], 6);
+                setColorFromPanel(mastermind_circles[x, y], 6);
             else if (x + super_mastermind_round_counter == num_rounds - 1)
-                super_mastermind_circles[x, y].Fill = getColorFromPanel(super_mastermind_circles[x, y], 8);
+                setColorFromPanel(super_mastermind_circles[x, y], 8);
         }
 
-        private SolidColorBrush getColorFromPanel(Ellipse sender, int num_colors)
+        private void setColorFromPanel(Ellipse sender, int num_colors)
         {
             Point mousePosition = Mouse.GetPosition(this);
 
-            ColorPanel colorPanel = new ColorPanel();
-            foreach (Label l in colorPanel.grid_colorpanel.Children)
-                l.MouseLeftButtonDown += getLabelColor;
+            ColorPanel colorPanel = new ColorPanel(ref sender);
             colorPanel.Owner = this;
 
             colorPanel.Top = mousePosition.Y - 45;
@@ -137,14 +134,6 @@ namespace Mastermind
             }
 
             colorPanel.ShowDialog();
-            return selected_color;
-        }
-
-        private void getLabelColor(object sender, EventArgs e)
-        {
-            Label senderLabel = sender as Label;
-            selected_color = senderLabel.Background as SolidColorBrush;
-            GetWindow(senderLabel).Close();
         }
 
         private void changeGameboard(object sender, EventArgs e)

@@ -1,27 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Mastermind
 {
-    /// <summary>
-    /// Interaction logic for ColorPanel.xaml
-    /// </summary>
     public partial class ColorPanel : Window
     {
-        public ColorPanel()
+        Ellipse selected_circle;
+
+        public ColorPanel(ref Ellipse selected_circle)
         {
             InitializeComponent();
+
+            this.selected_circle = selected_circle;
+
+            foreach (Label l in grid_colorpanel.Children)
+                l.MouseLeftButtonDown += getLabelColor;
+        }
+
+        private void getLabelColor(object sender, EventArgs e)
+        {
+            Label senderLabel = sender as Label;
+            selected_circle.Fill = senderLabel.Background as SolidColorBrush;
+            Close();
         }
     }
 }
