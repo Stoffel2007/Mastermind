@@ -16,8 +16,8 @@ namespace Mastermind
         
         public MainWindow()
         {
-            Top = 10;
-            Left = 10;
+            Top = 0;
+            Left = 0;
 
             InitializeComponent();
 
@@ -58,7 +58,7 @@ namespace Mastermind
                     newCircle1.Fill = Brushes.White;
                     newCircle1.Tag = new int[] { i, j };
                     Grid.SetRow(newCircle1, i);
-                    Grid.SetColumn(newCircle1, j);
+                    Grid.SetColumn(newCircle1, j + 1);
                     gameboard.Children.Add(newCircle1);
                     circles_check[i, j] = newCircle1;
 
@@ -71,7 +71,7 @@ namespace Mastermind
                     newCircle2.Tag = new int[] { i, j };
                     newCircle2.MouseLeftButtonDown += openColorPanel;
                     Grid.SetRow(newCircle2, i);
-                    Grid.SetColumn(newCircle2, j + width);
+                    Grid.SetColumn(newCircle2, j + width + 1);
                     gameboard.Children.Add(newCircle2);
                     circles[i, j] = newCircle2;
                 }
@@ -84,14 +84,11 @@ namespace Mastermind
             int width = circles.GetLength(1);
 
             gameboard.Height = length * (cell_size + 10);
-            gameboard.Width = 1.5* width * cell_size;
+            gameboard.Width = 1.5 * width * cell_size + cell_size / 2 + 10;
 
-            for (int i = 0; i < length; i++)
-            {
-                RowDefinition newRow = new RowDefinition();
-                newRow.Height = new GridLength(cell_size + 10);
-                gameboard.RowDefinitions.Add(newRow);
-            }
+            ColumnDefinition round_num_col = new ColumnDefinition();
+            round_num_col.Width = new GridLength(cell_size / 2 + 10);
+            gameboard.ColumnDefinitions.Add(round_num_col);
 
             for (int i = 0; i < width; i++)
             {
@@ -105,6 +102,22 @@ namespace Mastermind
                 ColumnDefinition newCol = new ColumnDefinition();
                 newCol.Width = new GridLength(cell_size);
                 gameboard.ColumnDefinitions.Add(newCol);
+            }
+
+            for (int i = 0; i < length; i++)
+            {
+                RowDefinition newRow = new RowDefinition();
+                newRow.Height = new GridLength(cell_size + 10);
+                gameboard.RowDefinitions.Add(newRow);
+
+                TextBlock round_num = new TextBlock();
+                round_num.Text = (12 - i).ToString();
+                Grid.SetRow(round_num, i);
+                Grid.SetColumn(round_num, 0);
+                round_num.VerticalAlignment = VerticalAlignment.Center;
+                round_num.HorizontalAlignment = HorizontalAlignment.Center;
+                round_num.FontSize = 20;
+                gameboard.Children.Add(round_num);
             }
         }
 
