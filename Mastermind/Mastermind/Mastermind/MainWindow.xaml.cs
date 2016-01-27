@@ -60,22 +60,30 @@ namespace Mastermind
             int row = num_rounds - round_counter - 1;
             int num_right_color_and_position = 0;
             int num_right_color = 1;
+            bool all_circles_filled = true;
 
             for (int i = 0; i < circles.GetLength(1); i++)
             {
                 if (circles[row, i].Fill == circles_solution[i].Fill)
                     num_right_color_and_position++;
+                else if (circles[row, i].Fill == Brushes.LightGreen)
+                    all_circles_filled = false;
             }
 
-            for (int i = 0; i < num_right_color_and_position; i++)
-                circles_check[row, i].Fill = Brushes.Black;
+            if (all_circles_filled)
+            {
+                for (int i = 0; i < num_right_color_and_position; i++)
+                    circles_check[row, i].Fill = Brushes.Black;
 
-            for (int i = num_right_color_and_position; i < num_right_color_and_position + num_right_color; i++)
-                circles_check[row, i].Fill = Brushes.White;
+                for (int i = num_right_color_and_position; i < num_right_color_and_position + num_right_color; i++)
+                    circles_check[row, i].Fill = Brushes.White;
 
-            round_counter++;
+                round_counter++;
 
-            MessageBox.Show(num_right_color_and_position.ToString());
+                MessageBox.Show(num_right_color_and_position.ToString());
+            }
+            else
+                MessageBox.Show("Nicht alle Kreise sind gefüllt!");
         }
 
         private void generateRandomSolution(ref Ellipse[] circles_solution, int num_colors)
@@ -140,7 +148,7 @@ namespace Mastermind
                     newCircle2.Height = cell_size - 5;
                     newCircle2.Width = cell_size - 5;
                     newCircle2.Stroke = Brushes.Black;
-                    newCircle2.Fill = Brushes.White;
+                    newCircle2.Fill = Brushes.LightGreen;
                     newCircle2.Tag = new int[] { i, j };
                     newCircle2.MouseLeftButtonDown += openColorPanel;
                     Grid.SetRow(newCircle2, i);
@@ -203,7 +211,7 @@ namespace Mastermind
 
             if (!game_is_super_mastermind && x + mastermind_round_counter == num_rounds - 1)
                 setColorFromPanel(mastermind_circles[x, y], false);
-            else if (x + super_mastermind_round_counter == num_rounds - 1)
+            else if (game_is_super_mastermind && x + super_mastermind_round_counter == num_rounds - 1)
                 setColorFromPanel(super_mastermind_circles[x, y], true);
         }
 
