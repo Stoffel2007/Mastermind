@@ -15,6 +15,7 @@ namespace Mastermind
         int cell_size, mastermind_round_counter, super_mastermind_round_counter, num_rounds, num_circles_mastermind, num_circles_super_mastermind, num_colors_mastermind, num_colors_super_mastermind;
         bool game_is_super_mastermind;
         SolidColorBrush[] random_colors;
+        SolidColorBrush background_color;
         
         public MainWindow()
         {
@@ -33,6 +34,8 @@ namespace Mastermind
             num_colors_super_mastermind = 8;
             game_is_super_mastermind = false;
             random_colors = new SolidColorBrush[] { Brushes.Red, Brushes.Yellow, Brushes.Green, Brushes.Blue, Brushes.Purple, Brushes.White, Brushes.Black, Brushes.Gray };
+            background_color = Brushes.LightGreen;
+            Background = background_color;
 
             mastermind_circles = new Ellipse[num_rounds, num_circles_mastermind];
             mastermind_circles_check = new Ellipse[num_rounds, num_circles_mastermind];
@@ -43,34 +46,66 @@ namespace Mastermind
             super_mastermind_circles = new Ellipse[num_rounds, num_circles_super_mastermind];
             super_mastermind_circles_check = new Ellipse[num_rounds, num_circles_super_mastermind];
 
-            InitializeCirclesInSolution(ref soluton_super_mastermind, ref super_mastermind_circles_solution, num_circles_super_mastermind, num_colors_super_mastermind);
+            InitializeCirclesInSolution(ref solution_super_mastermind, ref super_mastermind_circles_solution, num_circles_super_mastermind, num_colors_super_mastermind);
             InitializeCirclesInGrid(ref gameboard_super_mastermind, ref super_mastermind_circles, ref super_mastermind_circles_check);
         }
 
         private void playRound(object sender, EventArgs e)
         {
             if (!game_is_super_mastermind)
-                playRound(ref mastermind_circles, ref mastermind_circles_check, ref mastermind_circles_solution, ref mastermind_round_counter);
+                playRound(ref solution_mastermind, ref mastermind_circles, ref mastermind_circles_check, ref mastermind_circles_solution, ref mastermind_round_counter);
             else
-                playRound(ref super_mastermind_circles, ref super_mastermind_circles_check, ref super_mastermind_circles_solution, ref super_mastermind_round_counter);
+                playRound(ref solution_super_mastermind, ref super_mastermind_circles, ref super_mastermind_circles_check, ref super_mastermind_circles_solution, ref super_mastermind_round_counter);
         }
 
-        private void playRound(ref Ellipse[,] circles, ref Ellipse[,] circles_check, ref Ellipse[] circles_solution, ref int round_counter)
+        private void playRound(ref Grid grid_solution, ref Ellipse[,] circles, ref Ellipse[,] circles_check, ref Ellipse[] circles_solution, ref int round_counter)
         {
             int row = num_rounds - round_counter - 1;
             int num_right_color_and_position = 0;
-            int num_right_color = 1;
+            int num_right_color = 0;
+            int num_circles = circles.GetLength(1);
             bool all_circles_filled = true;
+            bool[] color_is_correct = new bool[num_circles];
+            bool[] circle_is_checked = new bool[num_circles];
 
-            for (int i = 0; i < circles.GetLength(1); i++)
+            for (int i = 0; i < num_circles; i++)
             {
                 if (circles[row, i].Fill == circles_solution[i].Fill)
+                {
                     num_right_color_and_position++;
-                else if (circles[row, i].Fill == Brushes.LightGreen)
+                    color_is_correct[i] = true;
+                    circle_is_checked[i] = true;
+                }
+                else if (circles[row, i].Fill == background_color)
                     all_circles_filled = false;
             }
 
-            if (all_circles_filled)
+            for (int i = 0; i < num_circles; i++)
+            {
+                if (!color_is_correct[i])
+                {
+                    for (int j = 0; j < num_circles; j++)
+                    {
+                        if (!circle_is_checked[j])
+                        {
+                            if (circles[row, i].Fill == circles_solution[j].Fill)
+                            {
+                                num_right_color++;
+                                circle_is_checked[j] = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (num_right_color_and_position == num_circles)
+            {
+                MessageBox.Show("Gewonnen! :-)");
+                resetGameboard();
+                grid_solution.Visibility = Visibility.Visible;
+            }
+            else if (all_circles_filled)
             {
                 for (int i = 0; i < num_right_color_and_position; i++)
                     circles_check[row, i].Fill = Brushes.Black;
@@ -80,10 +115,44 @@ namespace Mastermind
 
                 round_counter++;
 
-                MessageBox.Show(num_right_color_and_position.ToString());
+                if (round_counter == 12)
+                {
+                    MessageBox.Show("Verloren! :-(");
+                    resetGameboard();
+                }
             }
             else
                 MessageBox.Show("Nicht alle Kreise sind gefüllt!");
+        }
+
+        private void resetGameboard()
+        {
+            if (!game_is_super_mastermind)
+            {
+                mastermind_round_counter = 0;
+                for (int i = 0; i < mastermind_circles.GetLength(0); i++)
+                {
+                    for (int j = 0; j < mastermind_circles.GetLength(1); j++)
+                    {
+                        mastermind_circles[i, j].Fill = background_color;
+                        mastermind_circles_check[i, j].Fill = background_color;
+                    }
+                }
+                generateRandomSolution(ref mastermind_circles_solution, 6);
+            }
+            else
+            {
+                super_mastermind_round_counter = 0;
+                for (int i = 0; i < super_mastermind_circles.GetLength(0); i++)
+                {
+                    for (int j = 0; j < super_mastermind_circles.GetLength(1); j++)
+                    {
+                        super_mastermind_circles[i, j].Fill = background_color;
+                        super_mastermind_circles_check[i, j].Fill = background_color;
+                    }
+                }
+                generateRandomSolution(ref super_mastermind_circles_solution, 8);
+            }
         }
 
         private void generateRandomSolution(ref Ellipse[] circles_solution, int num_colors)
@@ -148,7 +217,7 @@ namespace Mastermind
                     newCircle2.Height = cell_size - 5;
                     newCircle2.Width = cell_size - 5;
                     newCircle2.Stroke = Brushes.Black;
-                    newCircle2.Fill = Brushes.LightGreen;
+                    newCircle2.Fill = background_color;
                     newCircle2.Tag = new int[] { i, j };
                     newCircle2.MouseLeftButtonDown += openColorPanel;
                     Grid.SetRow(newCircle2, i);
@@ -242,7 +311,7 @@ namespace Mastermind
                 gameboard_mastermind.Visibility = Visibility.Visible;
                 gameboard_super_mastermind.Visibility = Visibility.Collapsed;
                 solution_mastermind.Visibility = Visibility.Visible;
-                soluton_super_mastermind.Visibility = Visibility.Collapsed;
+                solution_super_mastermind.Visibility = Visibility.Collapsed;
                 combobox_super_mastermind.Visibility = Visibility.Visible;
                 game_is_super_mastermind = false;
             }
@@ -251,7 +320,7 @@ namespace Mastermind
                 gameboard_mastermind.Visibility = Visibility.Collapsed;
                 gameboard_super_mastermind.Visibility = Visibility.Visible;
                 solution_mastermind.Visibility = Visibility.Collapsed;
-                soluton_super_mastermind.Visibility = Visibility.Visible;
+                solution_super_mastermind.Visibility = Visibility.Visible;
                 combobox_mastermind.Visibility = Visibility.Visible;
                 game_is_super_mastermind = true;
             }

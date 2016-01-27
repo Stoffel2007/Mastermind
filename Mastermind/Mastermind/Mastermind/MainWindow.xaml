@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mastermind"
         mc:Ignorable="d"
-        Title="Mastermind" Height="730" Width="500" Background="LightGreen">
+        Title="Mastermind" Height="730" Width="500">
     
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <Grid>
@@ -17,7 +17,7 @@
 
             <StackPanel Margin="0,50,0,0" Orientation="Vertical">
                 <Grid Name="solution_mastermind" Visibility="Collapsed" />
-                <Grid Name="soluton_super_mastermind" Visibility="Collapsed" />
+                <Grid Name="solution_super_mastermind" Visibility="Collapsed" />
                 <Grid ShowGridLines="False" Name="gameboard_mastermind" Visibility="Collapsed" />
                 <Grid ShowGridLines="False" Name="gameboard_super_mastermind" Visibility="Collapsed" />
                 <Button Name="button_start" Content="OK" FontWeight="Bold" FontSize="20" Height="40" Width="40" Click="playRound" Visibility="Collapsed" Margin="0,10,0,0" />
