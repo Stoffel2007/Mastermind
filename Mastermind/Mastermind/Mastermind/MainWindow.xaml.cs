@@ -49,7 +49,33 @@ namespace Mastermind
 
         private void playRound(object sender, EventArgs e)
         {
+            if (!game_is_super_mastermind)
+                playRound(ref mastermind_circles, ref mastermind_circles_check, ref mastermind_circles_solution, ref mastermind_round_counter);
+            else
+                playRound(ref super_mastermind_circles, ref super_mastermind_circles_check, ref super_mastermind_circles_solution, ref super_mastermind_round_counter);
+        }
 
+        private void playRound(ref Ellipse[,] circles, ref Ellipse[,] circles_check, ref Ellipse[] circles_solution, ref int round_counter)
+        {
+            int row = num_rounds - round_counter - 1;
+            int num_right_color_and_position = 0;
+            int num_right_color = 1;
+
+            for (int i = 0; i < circles.GetLength(1); i++)
+            {
+                if (circles[row, i].Fill == circles_solution[i].Fill)
+                    num_right_color_and_position++;
+            }
+
+            for (int i = 0; i < num_right_color_and_position; i++)
+                circles_check[row, i].Fill = Brushes.Black;
+
+            for (int i = num_right_color_and_position; i < num_right_color_and_position + num_right_color; i++)
+                circles_check[row, i].Fill = Brushes.White;
+
+            round_counter++;
+
+            MessageBox.Show(num_right_color_and_position.ToString());
         }
 
         private void generateRandomSolution(ref Ellipse[] circles_solution, int num_colors)
@@ -103,7 +129,6 @@ namespace Mastermind
                     newCircle1.Height = cell_size / 2 - 5;
                     newCircle1.Width = cell_size / 2 - 5;
                     newCircle1.Stroke = Brushes.Black;
-                    newCircle1.Fill = Brushes.White;
                     newCircle1.Tag = new int[] { i, j };
                     Grid.SetRow(newCircle1, i);
                     Grid.SetColumn(newCircle1, j + 1);
