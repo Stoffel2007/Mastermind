@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -111,7 +112,7 @@ namespace Mastermind
                 gameboard.RowDefinitions.Add(newRow);
 
                 TextBlock round_num = new TextBlock();
-                round_num.Text = (12 - i).ToString();
+                round_num.Inlines.Add(new Bold(new Run((12 - i).ToString())));
                 Grid.SetRow(round_num, i);
                 Grid.SetColumn(round_num, 0);
                 round_num.VerticalAlignment = VerticalAlignment.Center;
