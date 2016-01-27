@@ -102,7 +102,7 @@ namespace Mastermind
             if (num_right_color_and_position == num_circles)
             {
                 grid_solution.Visibility = Visibility.Visible;
-                MessageBox.Show("Gewonnen! :-)");
+                MessageBox.Show("YOU WON! :-)");
                 resetGameboard();
             }
             else if (all_circles_filled)
@@ -118,12 +118,22 @@ namespace Mastermind
                 if (round_counter == 12)
                 {
                     grid_solution.Visibility = Visibility.Visible;
-                    MessageBox.Show("Verloren! :-(");
+                    MessageBox.Show("YOU LOST! :-(");
                     resetGameboard();
                 }
             }
             else
-                MessageBox.Show("Nicht alle Kreise sind gefüllt!");
+                MessageBox.Show("Not all circles are filled yet!");
+        }
+
+        private void resetGameboard(object sender, EventArgs e)
+        {
+            if (!game_is_super_mastermind)
+                solution_mastermind.Visibility = Visibility.Visible;
+            else
+                solution_super_mastermind.Visibility = Visibility.Visible;
+            MessageBox.Show("Game was resetted");
+            resetGameboard();
         }
 
         private void resetGameboard()
@@ -330,6 +340,7 @@ namespace Mastermind
 
             senderBox.Visibility = Visibility.Collapsed;
             button_start.Visibility = Visibility.Visible;
+            button_reset.Visibility = Visibility.Visible;
         }
     }
 }
