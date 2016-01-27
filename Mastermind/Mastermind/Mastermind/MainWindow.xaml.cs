@@ -101,9 +101,9 @@ namespace Mastermind
 
             if (num_right_color_and_position == num_circles)
             {
+                grid_solution.Visibility = Visibility.Visible;
                 MessageBox.Show("Gewonnen! :-)");
                 resetGameboard();
-                grid_solution.Visibility = Visibility.Visible;
             }
             else if (all_circles_filled)
             {
@@ -117,6 +117,7 @@ namespace Mastermind
 
                 if (round_counter == 12)
                 {
+                    grid_solution.Visibility = Visibility.Visible;
                     MessageBox.Show("Verloren! :-(");
                     resetGameboard();
                 }
@@ -139,6 +140,7 @@ namespace Mastermind
                     }
                 }
                 generateRandomSolution(ref mastermind_circles_solution, 6);
+                solution_mastermind.Visibility = Visibility.Hidden;
             }
             else
             {
@@ -152,6 +154,7 @@ namespace Mastermind
                     }
                 }
                 generateRandomSolution(ref super_mastermind_circles_solution, 8);
+                solution_super_mastermind.Visibility = Visibility.Hidden;
             }
         }
 
@@ -310,7 +313,7 @@ namespace Mastermind
             {
                 gameboard_mastermind.Visibility = Visibility.Visible;
                 gameboard_super_mastermind.Visibility = Visibility.Collapsed;
-                solution_mastermind.Visibility = Visibility.Visible;
+                solution_mastermind.Visibility = Visibility.Hidden;
                 solution_super_mastermind.Visibility = Visibility.Collapsed;
                 combobox_super_mastermind.Visibility = Visibility.Visible;
                 game_is_super_mastermind = false;
@@ -320,7 +323,7 @@ namespace Mastermind
                 gameboard_mastermind.Visibility = Visibility.Collapsed;
                 gameboard_super_mastermind.Visibility = Visibility.Visible;
                 solution_mastermind.Visibility = Visibility.Collapsed;
-                solution_super_mastermind.Visibility = Visibility.Visible;
+                solution_super_mastermind.Visibility = Visibility.Hidden;
                 combobox_mastermind.Visibility = Visibility.Visible;
                 game_is_super_mastermind = true;
             }
