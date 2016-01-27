@@ -16,6 +16,9 @@ namespace Mastermind
         
         public MainWindow()
         {
+            Top = 10;
+            Left = 10;
+
             InitializeComponent();
 
             cell_size = 40;
