@@ -23,7 +23,11 @@ namespace Mastermind
             }
 
             foreach (Label l in grid_colorpanel.Children)
+            {
+                l.BorderBrush = Brushes.Black;
+                l.BorderThickness = new Thickness(1);
                 l.MouseLeftButtonDown += getLabelColor;
+            }
         }
 
         private void getLabelColor(object sender, EventArgs e)
