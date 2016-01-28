@@ -70,12 +70,11 @@ namespace Mastermind
             int row = num_rounds[game_mode] - round_counter[game_mode] - 1;
             int num_right_color_and_position = 0;
             int num_right_color = 0;
-            int num_circles = circles[game_mode][0].Length;
             bool all_circles_filled = true;
-            bool[] color_is_correct = new bool[num_circles];
-            bool[] circle_is_checked = new bool[num_circles];
+            bool[] color_is_correct = new bool[num_circles[game_mode]];
+            bool[] circle_is_checked = new bool[num_circles[game_mode]];
 
-            for (int i = 0; i < num_circles; i++)
+            for (int i = 0; i < num_circles[game_mode]; i++)
             {
                 if (circles[game_mode][row][i].Fill == circles_solution[game_mode][i].Fill)
                 {
@@ -87,11 +86,11 @@ namespace Mastermind
                     all_circles_filled = false;
             }
 
-            for (int i = 0; i < num_circles; i++)
+            for (int i = 0; i < num_circles[game_mode]; i++)
             {
                 if (!color_is_correct[i])
                 {
-                    for (int j = 0; j < num_circles; j++)
+                    for (int j = 0; j < num_circles[game_mode]; j++)
                     {
                         if (!circle_is_checked[j])
                         {
@@ -106,11 +105,10 @@ namespace Mastermind
                 }
             }
 
-            if (num_right_color_and_position == num_circles)
+            if (num_right_color_and_position == num_circles[game_mode])
             {
                 grid_solution[game_mode].Visibility = Visibility.Visible;
                 MessageBox.Show("YOU WON! :-)");
-                resetGameboard();
             }
             else if (all_circles_filled)
             {
@@ -126,18 +124,14 @@ namespace Mastermind
                 {
                     grid_solution[game_mode].Visibility = Visibility.Visible;
                     MessageBox.Show("YOU LOST! :-(");
-                    resetGameboard();
                 }
             }
             else
                 MessageBox.Show("Not all circles are filled yet!");
         }
 
-        private void resetGameboard(object sender = null, EventArgs e = null)
+        private void resetGameboard(object sender, EventArgs e)
         {
-            grid_solution[game_mode].Visibility = Visibility.Visible;
-            MessageBox.Show("Game was resetted");
-
             round_counter[game_mode] = 0;
             for (int i = 0; i < circles[game_mode].Length; i++)
             {
