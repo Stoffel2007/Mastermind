@@ -108,7 +108,7 @@ namespace Mastermind
             if (num_right_color_and_position == num_circles[game_mode])
             {
                 grid_solution[game_mode].Visibility = Visibility.Visible;
-                MessageBox.Show("YOU WON! :-)");
+                sendMessage("YOU WON! :-)");
             }
             else if (all_circles_filled)
             {
@@ -121,13 +121,16 @@ namespace Mastermind
                 round_counter[game_mode]++;
 
                 if (round_counter[game_mode] == 12)
-                {
-                    grid_solution[game_mode].Visibility = Visibility.Visible;
-                    MessageBox.Show("YOU LOST! :-(");
-                }
+                    resign();
             }
             else
-                MessageBox.Show("Not all circles are filled yet!");
+                sendMessage("Not all circles are filled yet!");
+        }
+
+        private void resign(object sender = null, EventArgs e = null)
+        {
+            grid_solution[game_mode].Visibility = Visibility.Visible;
+            sendMessage("YOU LOST! :-(");
         }
 
         private void resetGameboard(object sender, EventArgs e)
@@ -288,6 +291,11 @@ namespace Mastermind
             colorPanel.ShowDialog();
         }
 
+        private void sendMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
+
         private void changeGameboard(object sender, EventArgs e)
         {
             ComboBoxItem senderBox = sender as ComboBoxItem;
@@ -305,6 +313,7 @@ namespace Mastermind
             comboboxes[game_mode].Visibility = Visibility.Collapsed;
             button_start.Visibility = Visibility.Visible;
             button_reset.Visibility = Visibility.Visible;
+            button_resign.Visibility = Visibility.Visible;
         }
     }
 }

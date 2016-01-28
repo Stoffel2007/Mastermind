@@ -22,7 +22,8 @@
                 <Grid ShowGridLines="False" Name="grid_gameboard_super_mastermind" Visibility="Collapsed" />
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0, 10, 0, 0">
                     <Button Name="button_start" Content="OK" FontWeight="Bold" FontSize="20" Height="40" Width="40" Click="playRound" Visibility="Collapsed" />
-                    <Button Name="button_reset" Content="Reset" FontWeight="Bold" FontSize="20" Height="40" Width="60" Click="resetGameboard" Visibility="Collapsed" Margin="10, 0, 0, 0" />
+                    <Button Name="button_resign" Content="Resign" FontWeight="Bold" FontSize="20" Height="40" Width="80" Click="resign" Visibility="Collapsed" Margin="10,0,0,0" />
+                    <Button Name="button_reset" Content="Reset" FontWeight="Bold" FontSize="20" Height="40" Width="60" Click="resetGameboard" Visibility="Collapsed" Margin="10,0,0,0" />
                 </StackPanel>
             </StackPanel>
         </Grid>
