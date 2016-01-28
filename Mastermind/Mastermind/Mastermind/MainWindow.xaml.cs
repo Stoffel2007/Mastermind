@@ -18,6 +18,7 @@ namespace Mastermind
         int cell_size, game_mode;
         SolidColorBrush[] random_colors;
         SolidColorBrush background_color;
+        bool game_is_blocked;
 
         public MainWindow()
         {
@@ -35,6 +36,7 @@ namespace Mastermind
             random_colors = new SolidColorBrush[] { Brushes.Red, Brushes.Yellow, Brushes.Green, Brushes.Blue, Brushes.Purple, Brushes.White, Brushes.Black, Brushes.Gray };
             background_color = Brushes.LightGreen;
             Background = background_color;
+            game_is_blocked = false;
 
             grid_solution = new Grid[] { grid_solution_mastermind, grid_solution_super_mastermind };
             grid_gameboard = new Grid[] { grid_gameboard_mastermind, grid_gameboard_super_mastermind };
@@ -67,74 +69,82 @@ namespace Mastermind
 
         private void playRound(object sender, EventArgs e)
         {
-            int row = num_rounds[game_mode] - round_counter[game_mode] - 1;
-            int num_right_color_and_position = 0;
-            int num_right_color = 0;
-            bool all_circles_filled = true;
-            bool[] color_is_correct = new bool[num_circles[game_mode]];
-            bool[] circle_is_checked = new bool[num_circles[game_mode]];
-
-            for (int i = 0; i < num_circles[game_mode]; i++)
+            if (!game_is_blocked)
             {
-                if (circles[game_mode][row][i].Fill == circles_solution[game_mode][i].Fill)
-                {
-                    num_right_color_and_position++;
-                    color_is_correct[i] = true;
-                    circle_is_checked[i] = true;
-                }
-                else if (circles[game_mode][row][i].Fill == background_color)
-                    all_circles_filled = false;
-            }
+                int row = num_rounds[game_mode] - round_counter[game_mode] - 1;
+                int num_right_color_and_position = 0;
+                int num_right_color = 0;
+                bool all_circles_filled = true;
+                bool[] color_is_correct = new bool[num_circles[game_mode]];
+                bool[] circle_is_checked = new bool[num_circles[game_mode]];
 
-            for (int i = 0; i < num_circles[game_mode]; i++)
-            {
-                if (!color_is_correct[i])
+                for (int i = 0; i < num_circles[game_mode]; i++)
                 {
-                    for (int j = 0; j < num_circles[game_mode]; j++)
+                    if (circles[game_mode][row][i].Fill == circles_solution[game_mode][i].Fill)
                     {
-                        if (!circle_is_checked[j])
+                        num_right_color_and_position++;
+                        color_is_correct[i] = true;
+                        circle_is_checked[i] = true;
+                    }
+                    else if (circles[game_mode][row][i].Fill == background_color)
+                        all_circles_filled = false;
+                }
+
+                for (int i = 0; i < num_circles[game_mode]; i++)
+                {
+                    if (!color_is_correct[i])
+                    {
+                        for (int j = 0; j < num_circles[game_mode]; j++)
                         {
-                            if (circles[game_mode][row][i].Fill == circles_solution[game_mode][j].Fill)
+                            if (!circle_is_checked[j])
                             {
-                                num_right_color++;
-                                circle_is_checked[j] = true;
-                                break;
+                                if (circles[game_mode][row][i].Fill == circles_solution[game_mode][j].Fill)
+                                {
+                                    num_right_color++;
+                                    circle_is_checked[j] = true;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+
+                if (num_right_color_and_position == num_circles[game_mode])
+                {
+                    grid_solution[game_mode].Visibility = Visibility.Visible;
+                    sendMessage("YOU WON! :-)");
+                }
+                else if (all_circles_filled)
+                {
+                    for (int i = 0; i < num_right_color_and_position; i++)
+                        circles_check[game_mode][row][i].Fill = Brushes.Black;
+
+                    for (int i = num_right_color_and_position; i < num_right_color_and_position + num_right_color; i++)
+                        circles_check[game_mode][row][i].Fill = Brushes.White;
+
+                    round_counter[game_mode]++;
+
+                    if (round_counter[game_mode] == 12)
+                        resign();
+                }
+                else
+                    sendMessage("Not all circles are filled yet!");
             }
-
-            if (num_right_color_and_position == num_circles[game_mode])
-            {
-                grid_solution[game_mode].Visibility = Visibility.Visible;
-                sendMessage("YOU WON! :-)");
-            }
-            else if (all_circles_filled)
-            {
-                for (int i = 0; i < num_right_color_and_position; i++)
-                    circles_check[game_mode][row][i].Fill = Brushes.Black;
-
-                for (int i = num_right_color_and_position; i < num_right_color_and_position + num_right_color; i++)
-                    circles_check[game_mode][row][i].Fill = Brushes.White;
-
-                round_counter[game_mode]++;
-
-                if (round_counter[game_mode] == 12)
-                    resign();
-            }
-            else
-                sendMessage("Not all circles are filled yet!");
         }
 
         private void resign(object sender = null, EventArgs e = null)
         {
-            grid_solution[game_mode].Visibility = Visibility.Visible;
-            sendMessage("YOU LOST! :-(");
+            if (!game_is_blocked)
+            {
+                game_is_blocked = true;
+                grid_solution[game_mode].Visibility = Visibility.Visible;
+                sendMessage("YOU LOST! :-(");
+            }
         }
 
         private void resetGameboard(object sender, EventArgs e)
         {
+            game_is_blocked = false;
             round_counter[game_mode] = 0;
             for (int i = 0; i < circles[game_mode].Length; i++)
             {
@@ -269,7 +279,7 @@ namespace Mastermind
             int x = coordinates[0];
             int y = coordinates[1];
 
-            if (round_counter[game_mode] == num_rounds[game_mode] - x - 1)
+            if (round_counter[game_mode] + x + 1 == num_rounds[game_mode] && !game_is_blocked)
                 setColorFromPanel(circles[game_mode][x][y]);
         }
 
