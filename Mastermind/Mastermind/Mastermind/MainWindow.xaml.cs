@@ -18,6 +18,7 @@ namespace Mastermind
         int cell_size, game_mode;
         SolidColorBrush[] random_colors;
         SolidColorBrush background_color;
+        TextBlock[][] textblock_current_round;
         bool game_is_blocked;
 
         public MainWindow()
@@ -48,6 +49,7 @@ namespace Mastermind
             circles = new Ellipse[num_modes][][];
             circles_check = new Ellipse[num_modes][][];
             circles_solution = new Ellipse[num_modes][];
+            textblock_current_round = new TextBlock[num_modes][];
 
             for (int mode = 0; mode < num_modes; mode++)
             {
@@ -60,6 +62,8 @@ namespace Mastermind
                     circles_check[mode][j] = new Ellipse[num_circles[mode]];
 
                 circles_solution[mode] = new Ellipse[num_circles[mode]];
+
+                textblock_current_round[mode] = new TextBlock[num_rounds[mode]];
 
                 InitializeCirclesInSolution(mode);
                 InitializeGameboards(mode);
@@ -111,6 +115,9 @@ namespace Mastermind
 
                 if (num_right_color_and_position == num_circles[game_mode])
                 {
+                    for (int i = 0; i < num_right_color_and_position; i++)
+                        circles_check[game_mode][row][i].Fill = Brushes.Black;
+
                     grid_solution[game_mode].Visibility = Visibility.Visible;
                     sendMessage("YOU WON! :-)");
                 }
@@ -122,7 +129,7 @@ namespace Mastermind
                     for (int i = num_right_color_and_position; i < num_right_color_and_position + num_right_color; i++)
                         circles_check[game_mode][row][i].Fill = Brushes.White;
 
-                    round_counter[game_mode]++;
+                    changeRound(round_counter[game_mode] + 1, game_mode);
 
                     if (round_counter[game_mode] == 12)
                         resign();
@@ -145,13 +152,13 @@ namespace Mastermind
         private void resetGameboard(object sender, EventArgs e)
         {
             game_is_blocked = false;
-            round_counter[game_mode] = 0;
+            changeRound(0, game_mode);
             for (int i = 0; i < circles[game_mode].Length; i++)
             {
                 for (int j = 0; j < circles[game_mode][i].Length; j++)
                 {
                     circles[game_mode][i][j].Fill = background_color;
-                    circles[game_mode][i][j].Fill = background_color;
+                    circles_check[game_mode][i][j].Fill = background_color;
                 }
             }
             generateRandomSolution();
@@ -261,15 +268,28 @@ namespace Mastermind
                 newRow.Height = new GridLength(cell_size + 10);
                 grid_gameboard[mode].RowDefinitions.Add(newRow);
 
-                TextBlock round_num = new TextBlock();
-                round_num.Inlines.Add(new Bold(new Run((12 - i).ToString())));
-                Grid.SetRow(round_num, i);
-                Grid.SetColumn(round_num, 0);
-                round_num.VerticalAlignment = VerticalAlignment.Center;
-                round_num.HorizontalAlignment = HorizontalAlignment.Center;
-                round_num.FontSize = 20;
-                grid_gameboard[mode].Children.Add(round_num);
+                TextBlock text_round_num = new TextBlock();
+                text_round_num.Text = (num_rounds[mode] - i).ToString();
+                Grid.SetRow(text_round_num, i);
+                Grid.SetColumn(text_round_num, 0);
+                text_round_num.VerticalAlignment = VerticalAlignment.Center;
+                text_round_num.HorizontalAlignment = HorizontalAlignment.Center;
+                text_round_num.FontSize = 20;
+                grid_gameboard[mode].Children.Add(text_round_num);
+                textblock_current_round[mode][i] = text_round_num;
             }
+
+            changeRound(0, mode);
+        }
+
+        private void changeRound(int round, int mode)
+        {
+            round_counter[mode] = round;
+            for (int i = 0; i < num_rounds[mode]; i++)
+                textblock_current_round[mode][i].Text = (num_rounds[mode] - i).ToString();
+
+            textblock_current_round[mode][num_rounds[mode] - round - 1].Text = "";
+            textblock_current_round[mode][num_rounds[mode] - round - 1].Inlines.Add(new Bold(new Run((round + 1).ToString())));
         }
 
         private void openColorPanel(object sender, EventArgs e)
