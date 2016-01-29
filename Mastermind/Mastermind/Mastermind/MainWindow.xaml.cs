@@ -16,7 +16,7 @@ namespace Mastermind
         int cell_size, game_mode;
         SolidColorBrush[] random_colors;
         SolidColorBrush background_color;
-        bool game_is_blocked;
+        bool[] game_is_blocked;
         Ellipse[][][] circles, circles_check;
         Ellipse[][] circles_solution;
         TextBlock[][] textblock_current_round;
@@ -38,7 +38,7 @@ namespace Mastermind
             cell_size = 35;
             random_colors = new SolidColorBrush[] { Brushes.Red, Brushes.Yellow, Brushes.Green, Brushes.Blue, Brushes.Purple, Brushes.White, Brushes.Black, Brushes.Gray };
             background_color = Brushes.LightGreen;
-            game_is_blocked = false;
+            game_is_blocked = new bool[] { false, false, false, false, false };
             
             Background = background_color;
             int num_modes = round_counter.Length;
@@ -70,7 +70,7 @@ namespace Mastermind
         #region
         private void playRound(object sender, EventArgs e)
         {
-            if (!game_is_blocked)
+            if (!game_is_blocked[game_mode])
             {
                 int row = num_rounds[game_mode] - round_counter[game_mode] - 1;
                 int num_right_color_and_position = 0;
@@ -117,7 +117,7 @@ namespace Mastermind
 
                     grid_solution[game_mode].Visibility = Visibility.Visible;
                     sendMessage("YOU WON! :-)");
-                    game_is_blocked = true;
+                    game_is_blocked[game_mode] = true;
                 }
                 else if (all_circles_filled)
                 {
@@ -139,13 +139,13 @@ namespace Mastermind
 
         private void resign(object sender, EventArgs e)
         {
-            if (!game_is_blocked && round_counter[game_mode] != 0 && MessageBox.Show("Are you sure?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (!game_is_blocked[game_mode] && round_counter[game_mode] != 0 && MessageBox.Show("Are you sure?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 loss();
         }
 
         private void loss()
         {
-            game_is_blocked = true;
+            game_is_blocked[game_mode] = true;
             grid_solution[game_mode].Visibility = Visibility.Visible;
             sendMessage("YOU LOST! :-(");
         }
@@ -183,7 +183,7 @@ namespace Mastermind
         {
             if (round_counter[game_mode] != 0 && MessageBox.Show("Are you sure?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                game_is_blocked = false;
+                game_is_blocked[game_mode] = false;
                 changeRound(0, game_mode);
                 for (int i = 0; i < circles[game_mode].Length; i++)
                 {
@@ -224,7 +224,7 @@ namespace Mastermind
             int x = coordinates[0];
             int y = coordinates[1];
 
-            if (round_counter[game_mode] + x + 1 == num_rounds[game_mode] && !game_is_blocked)
+            if (round_counter[game_mode] + x + 1 == num_rounds[game_mode] && !game_is_blocked[game_mode])
                 setColorFromPanel(circles[game_mode][x][y]);
         }
 
