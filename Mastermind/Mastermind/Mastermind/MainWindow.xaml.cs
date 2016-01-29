@@ -129,22 +129,25 @@ namespace Mastermind
 
                     changeRound(round_counter[game_mode] + 1, game_mode);
 
-                    if (round_counter[game_mode] == 12)
-                        resign();
+                    if (round_counter[game_mode] == num_rounds[game_mode])
+                        loss();
                 }
                 else
                     sendMessage("Not all circles are filled yet!");
             }
         }
 
-        private void resign(object sender = null, EventArgs e = null)
+        private void resign(object sender, EventArgs e)
         {
             if (!game_is_blocked && round_counter[game_mode] != 0 && MessageBox.Show("Are you sure?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            {
-                game_is_blocked = true;
-                grid_solution[game_mode].Visibility = Visibility.Visible;
-                sendMessage("YOU LOST! :-(");
-            }
+                loss();
+        }
+
+        private void loss()
+        {
+            game_is_blocked = true;
+            grid_solution[game_mode].Visibility = Visibility.Visible;
+            sendMessage("YOU LOST! :-(");
         }
 
         private void generateRandomSolution()
@@ -204,8 +207,11 @@ namespace Mastermind
             for (int i = 0; i < num_rounds[mode]; i++)
                 textblock_current_round[mode][i].Text = (num_rounds[mode] - i).ToString();
 
-            textblock_current_round[mode][num_rounds[mode] - round - 1].Text = "";
-            textblock_current_round[mode][num_rounds[mode] - round - 1].Inlines.Add(new Bold(new Run((round + 1).ToString())));
+            if (round != num_rounds[mode])
+            {
+                textblock_current_round[mode][num_rounds[mode] - round - 1].Text = "";
+                textblock_current_round[mode][num_rounds[mode] - round - 1].Inlines.Add(new Bold(new Run((round + 1).ToString())));
+            }
         }
         #endregion
 
