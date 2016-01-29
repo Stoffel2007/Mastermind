@@ -153,12 +153,17 @@ namespace Mastermind
         {
             game_mode = Convert.ToInt32((sender as ComboBoxItem).Tag);
 
+            for (int i = 0; i < grid_solution.Length; i++)
+            {
+                grid_gameboard[i].Visibility = Visibility.Collapsed;
+                grid_solution[i].Visibility = Visibility.Collapsed;
+                comboboxes[i].Visibility = Visibility.Visible;
+            }
+
             grid_gameboard[game_mode].Visibility = Visibility.Visible;
-            grid_gameboard[-game_mode + 1].Visibility = Visibility.Collapsed;
             grid_solution[game_mode].Visibility = Visibility.Hidden;
-            grid_solution[-game_mode + 1].Visibility = Visibility.Collapsed;
-            comboboxes[-game_mode + 1].Visibility = Visibility.Visible;
             comboboxes[game_mode].Visibility = Visibility.Collapsed;
+
             button_start.Visibility = Visibility.Visible;
             button_reset.Visibility = Visibility.Visible;
             button_resign.Visibility = Visibility.Visible;
