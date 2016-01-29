@@ -150,7 +150,7 @@ namespace Mastermind
         {
             Random rand = new Random();
 
-            for (int i = 0; i < circles_solution.Length; i++)
+            for (int i = 0; i < circles_solution[game_mode].Length; i++)
                 circles_solution[game_mode][i].Fill = random_colors[rand.Next(num_colors[game_mode])];
         }
         #endregion
