@@ -12,17 +12,23 @@
             <ComboBox HorizontalContentAlignment="Center" Name="combobox_game_mode" Height="25" Width="125" VerticalAlignment="Top" Margin="0,10,0,0">
                 <ComboBoxItem Content="Game" IsSelected="True" IsEnabled="False" Visibility="Collapsed" />
                 <ComboBoxItem Name="combobox_mastermind" Content="Mastermind" Tag="0" />
-                <ComboBoxItem Name="combobox_super_mastermind" Content="Super Mastermind" Tag="1" />
-                <ComboBoxItem Name="combobox_mastermind_light" Content="Mastermind Light" Tag="2" />
+                <ComboBoxItem Name="combobox_super_mastermind" Content="Super Mastermind" />
+                <ComboBoxItem Name="combobox_mastermind_light" Content="Mastermind Light" />
+                <ComboBoxItem Name="combobox_travel_mastermind" Content="Travel Mastermind" />
+                <ComboBoxItem Name="combobox_mini_mastermind" Content="Mini Mastermind" />
             </ComboBox>
 
             <StackPanel Name="stackpanel_grids" Margin="0,50,0,0" Orientation="Vertical">
                 <Grid Name="grid_solution_mastermind" />
                 <Grid Name="grid_solution_super_mastermind" />
                 <Grid Name="grid_solution_mastermind_light" />
+                <Grid Name="grid_solution_travel_mastermind" />
+                <Grid Name="grid_solution_mini_mastermind" />
                 <Grid ShowGridLines="False" Name="grid_gameboard_mastermind" />
                 <Grid ShowGridLines="False" Name="grid_gameboard_super_mastermind" />
                 <Grid ShowGridLines="False" Name="grid_gameboard_mastermind_light" />
+                <Grid ShowGridLines="False" Name="grid_gameboard_travel_mastermind" />
+                <Grid ShowGridLines="False" Name="grid_gameboard_mini_mastermind" />
                 <StackPanel Name="stackpanel_buttons" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0, 10, 0, 0">
                     <Button Name="button_start" Content="OK" FontWeight="Bold" FontSize="20" Height="40" Width="40" Click="playRound" />
                     <Button Name="button_resign" Content="Resign" FontWeight="Bold" FontSize="20" Height="40" Width="80" Click="resign" Margin="10,0,0,0" />

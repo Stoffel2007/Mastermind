@@ -28,15 +28,14 @@ namespace Mastermind
 
             InitializeComponent();
 
-            comboboxes = new ComboBoxItem[] { combobox_mastermind, combobox_super_mastermind, combobox_mastermind_light };
-            grid_gameboard = new Grid[] { grid_gameboard_mastermind, grid_gameboard_super_mastermind, grid_gameboard_mastermind_light };
-            grid_solution = new Grid[] { grid_solution_mastermind, grid_solution_super_mastermind, grid_solution_mastermind_light };
-            round_counter = new int[] { 0, 0, 0 };
-            num_rounds = new int[] { 12, 12, 8 };
-            num_circles = new int[] { 4, 5, 3 };
-            num_colors = new int[] { 6, 8, 4 };
+            comboboxes = new ComboBoxItem[] { combobox_mastermind, combobox_super_mastermind, combobox_mastermind_light, combobox_travel_mastermind, combobox_travel_mastermind };
+            grid_gameboard = new Grid[] { grid_gameboard_mastermind, grid_gameboard_super_mastermind, grid_gameboard_mastermind_light, grid_gameboard_travel_mastermind, grid_gameboard_mini_mastermind };
+            grid_solution = new Grid[] { grid_solution_mastermind, grid_solution_super_mastermind, grid_solution_mastermind_light, grid_solution_travel_mastermind, grid_solution_mini_mastermind };
+            round_counter = new int[] { 0, 0, 0, 0, 0 };
+            num_rounds = new int[] { 12, 12, 8, 6, 8 };
+            num_circles = new int[] { 4, 5, 3, 4, 4 };
+            num_colors = new int[] { 6, 8, 4, 6, 6 };
             cell_size = 35;
-            game_mode = -1;
             random_colors = new SolidColorBrush[] { Brushes.Red, Brushes.Yellow, Brushes.Green, Brushes.Blue, Brushes.Purple, Brushes.White, Brushes.Black, Brushes.Gray };
             background_color = Brushes.LightGreen;
             game_is_blocked = false;
@@ -58,6 +57,13 @@ namespace Mastermind
             }
 
             HideElements();
+
+            int tag = 0;
+            foreach (ComboBoxItem item in combobox_game_mode.Items)
+            {
+                item.Tag = (tag - 1).ToString();
+                tag++;
+            }
         }
 
         // Game logic
