@@ -130,7 +130,7 @@ namespace Mastermind
 
         private void resign(object sender = null, EventArgs e = null)
         {
-            if (!game_is_blocked)
+            if (!game_is_blocked && round_counter[game_mode] != 0 && MessageBox.Show("Are you sure?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 game_is_blocked = true;
                 grid_solution[game_mode].Visibility = Visibility.Visible;
@@ -166,19 +166,22 @@ namespace Mastermind
 
         private void resetGameboard(object sender, EventArgs e)
         {
-            game_is_blocked = false;
-            changeRound(0, game_mode);
-            for (int i = 0; i < circles[game_mode].Length; i++)
+            if (round_counter[game_mode] != 0 && MessageBox.Show("Are you sure?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                for (int j = 0; j < circles[game_mode][i].Length; j++)
+                game_is_blocked = false;
+                changeRound(0, game_mode);
+                for (int i = 0; i < circles[game_mode].Length; i++)
                 {
-                    circles[game_mode][i][j].Fill = background_color;
-                    circles_check[game_mode][i][j].Fill = background_color;
+                    for (int j = 0; j < circles[game_mode][i].Length; j++)
+                    {
+                        circles[game_mode][i][j].Fill = background_color;
+                        circles_check[game_mode][i][j].Fill = background_color;
+                    }
                 }
-            }
 
-            generateRandomSolution();
-            grid_solution[game_mode].Visibility = Visibility.Hidden;
+                generateRandomSolution();
+                grid_solution[game_mode].Visibility = Visibility.Hidden;
+            }
         }
 
         private void changeRound(int round, int mode)
