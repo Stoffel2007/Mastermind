@@ -28,13 +28,13 @@ namespace Mastermind
 
             InitializeComponent();
 
-            comboboxes = new ComboBoxItem[] { combobox_mastermind, combobox_super_mastermind };
-            grid_gameboard = new Grid[] { grid_gameboard_mastermind, grid_gameboard_super_mastermind };
-            grid_solution = new Grid[] { grid_solution_mastermind, grid_solution_super_mastermind };
-            round_counter = new int[] { 0, 0 };
-            num_rounds = new int[] { 12, 12 };
-            num_circles = new int[] { 4, 5 };
-            num_colors = new int[] { 6, 8 };
+            comboboxes = new ComboBoxItem[] { combobox_mastermind, combobox_super_mastermind, combobox_mastermind_light };
+            grid_gameboard = new Grid[] { grid_gameboard_mastermind, grid_gameboard_super_mastermind, grid_gameboard_mastermind_light };
+            grid_solution = new Grid[] { grid_solution_mastermind, grid_solution_super_mastermind, grid_solution_mastermind_light };
+            round_counter = new int[] { 0, 0, 0 };
+            num_rounds = new int[] { 12, 12, 8 };
+            num_circles = new int[] { 4, 5, 3 };
+            num_colors = new int[] { 6, 8, 4 };
             cell_size = 35;
             game_mode = -1;
             random_colors = new SolidColorBrush[] { Brushes.Red, Brushes.Yellow, Brushes.Green, Brushes.Blue, Brushes.Purple, Brushes.White, Brushes.Black, Brushes.Gray };
@@ -56,6 +56,8 @@ namespace Mastermind
                 AdjustSolutionCircles(mode);
                 AdjustGameboardCircles(mode);
             }
+
+            HideElements();
         }
 
         // Game logic
@@ -164,9 +166,7 @@ namespace Mastermind
             grid_solution[game_mode].Visibility = Visibility.Hidden;
             comboboxes[game_mode].Visibility = Visibility.Collapsed;
 
-            button_start.Visibility = Visibility.Visible;
-            button_reset.Visibility = Visibility.Visible;
-            button_resign.Visibility = Visibility.Visible;
+            stackpanel_buttons.Visibility = Visibility.Visible;
         }
 
         private void resetGameboard(object sender, EventArgs e)
@@ -186,6 +186,8 @@ namespace Mastermind
 
                 generateRandomSolution();
                 grid_solution[game_mode].Visibility = Visibility.Hidden;
+
+                MessageBox.Show("Game was resetted");
             }
         }
 
@@ -217,7 +219,7 @@ namespace Mastermind
         {
             Point mousePosition = Mouse.GetPosition(this);
 
-            ColorPanel colorPanel = new ColorPanel(ref sender, game_mode == 1);
+            ColorPanel colorPanel = new ColorPanel(ref sender, num_colors[game_mode]);
             colorPanel.Owner = this;
 
             colorPanel.Top = mousePosition.Y - 120;
@@ -356,6 +358,15 @@ namespace Mastermind
                     circles[mode][i][j] = newCircle2;
                 }
             }
+        }
+
+        private void HideElements()
+        {
+            foreach (ComboBoxItem item in combobox_game_mode.Items)
+                item.Selected += changeGameboard;
+
+            foreach (UIElement element in stackpanel_grids.Children)
+                element.Visibility = Visibility.Collapsed;
         }
         #endregion
 
