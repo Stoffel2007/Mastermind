@@ -117,6 +117,7 @@ namespace Mastermind
 
                     grid_solution[game_mode].Visibility = Visibility.Visible;
                     sendMessage("YOU WON! :-)");
+                    game_is_blocked = true;
                 }
                 else if (all_circles_filled)
                 {
