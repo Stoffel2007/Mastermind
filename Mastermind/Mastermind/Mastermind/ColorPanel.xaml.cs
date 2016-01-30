@@ -27,6 +27,7 @@ namespace Mastermind
                 l.BorderBrush = Brushes.Black;
                 l.BorderThickness = new Thickness(1);
                 l.MouseLeftButtonDown += getLabelColor;
+                l.TouchDown += getLabelColor;
             }
         }
 

@@ -365,6 +365,7 @@ namespace Mastermind
                     newCircle2.Fill = background_color;
                     newCircle2.Tag = new int[] { i, j };
                     newCircle2.MouseLeftButtonDown += openColorPanel;
+                    newCircle2.TouchDown += openColorPanel;
                     Grid.SetRow(newCircle2, i);
                     Grid.SetColumn(newCircle2, j + width + 1);
                     grid_gameboard[mode].Children.Add(newCircle2);
