@@ -197,7 +197,7 @@ namespace Mastermind
                 generateRandomSolution();
                 grid_solution[game_mode].Visibility = Visibility.Hidden;
 
-                MessageBox.Show("Game was resetted");
+                MessageBox.Show("Game was reset");
             }
         }
 
